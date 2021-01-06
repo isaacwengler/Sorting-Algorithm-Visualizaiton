@@ -10,6 +10,7 @@ WHITE = (255, 255, 255)
 NAVY = (12, 7, 82)
 BLUE = (10, 94, 125)
 GREEN = (18, 117, 99)
+NEON = (114, 218, 63)
 
 pygame.init()
 WIN = pygame.display.set_mode((WIDTH, WIDTH))
@@ -31,6 +32,9 @@ class bar:
 
     def get_color(self):
         return self.color
+
+    def set_height(self, height):
+        self.height = height
 
     def set_color(self, color):
         self.color = color
@@ -56,7 +60,7 @@ def draw_screen(array_size):
     WIN.fill(WHITE)
     WIN.blit(header, (0, 0))
     for i in range(len(chart)):
-        pygame.draw.rect(WIN, chart[i].get_color(), pygame.Rect((i * (int((WIDTH)/array_size))), 800-chart[i].get_height(), int((WIDTH)/array_size), chart[i].get_height()), width=0)
+        pygame.draw.rect(WIN, chart[i].get_color(), pygame.Rect((i * (int((WIDTH)/array_size))), 800-chart[i].get_height(), int((WIDTH)/array_size), chart[i].get_height()))
 
     for i in range(3):
         pygame.draw.rect(WIN, NAVY, pygame.Rect(int(WIDTH/4)*int(i+1), 27 * settings[i], int(WIDTH/4), 27), width=1)
@@ -66,9 +70,9 @@ def check_mouse():
     pos = pygame.mouse.get_pos()
     if pos[0] < int(WIDTH/4) and pos[1] < int(WIDTH/8):
         array_size = set_array()
-        return False, array_size
+        return array_size
     if pos[0] < int(WIDTH/4) and pos[1] > int(WIDTH/8) and pos[1] < int(WIDTH/4):
-        return True, array_size
+        return True
 
 def check_key(event):
     if event.key == pygame.K_LEFT:
@@ -101,8 +105,30 @@ def sort():
         heap()
     return False
 
-
-
+def bubble():
+    for i in range(len(chart)):
+        for j in range(len(chart)-i-1):
+            chart[j].set_color(BLUE)
+            chart[j+1].set_color(BLUE)
+            draw_screen(len(chart))
+            pygame.display.update()
+            
+            if chart[j].get_height() > chart[j+1].get_height():
+                chart[j].set_color(NEON)
+                chart[j+1].set_color(NEON)
+                draw_screen(len(chart))
+                pygame.display.update()
+                
+                temp = chart[j].get_height()
+                chart[j].set_height(chart[j+1].get_height())
+                chart[j+1].set_height(temp)
+            chart[j].set_color(NAVY)
+            chart[j+1].set_color(NAVY)
+            if (j+1) == (len(chart)-i-1):
+                chart[j+1].set_color(GREEN)
+                if j == 0:
+                    chart[j].set_color(GREEN)
+            
 
 
 array_size = set_array()
@@ -117,7 +143,10 @@ while run:
         elif not sorting:
             if event.type == pygame.MOUSEBUTTONUP: 
                 temp = check_mouse()
-                sorting, array_size = temp[0], temp[1]
+                if type(temp) == int:
+                    array_size = temp
+                else:
+                    sorting = temp
             elif event.type == pygame.KEYDOWN:
                 check_key(event)
     
