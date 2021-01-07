@@ -100,7 +100,7 @@ def sort():
     elif settings[0] == 2:
         insertion()
     elif settings[0] == 3:
-        quick()
+        quicksort(0, len(chart)-1)
     elif settings[0] == 4:
         merge()
     elif settings[0] == 5:
@@ -158,6 +158,108 @@ def insertion():
             j -= 1
         if i == len(chart)-1:
             color_rest_green(j + 1)
+
+def partition(low, high):
+    i = low-1
+    pivot = chart[high].get_height()
+    chart[high].set_color(NEON)
+    for j in range(low, high):
+        chart[j].set_color(PURPLE)
+        draw_screen(len(chart))
+        pygame.display.update()
+        if chart[j].get_height() < pivot:
+            i += 1
+            temp = chart[i].get_height()
+            chart[i].set_height(chart[j].get_height())
+            chart[j].set_height(temp)
+            chart[i].set_color(BLUE)
+            chart[j].set_color(BLUE)
+            draw_screen(len(chart))
+            pygame.display.update()
+            chart[i].set_color(NAVY)
+        chart[j].set_color(NAVY)
+    temp = chart[i + 1].get_height()
+    chart[i + 1].set_height(chart[high].get_height())
+    chart[high].set_height(temp)
+    chart[i+1].set_color(GREEN)
+    draw_screen(len(chart))
+    pygame.display.update()
+    return (i+1)
+
+def quicksort(low, high):
+    if low < high:
+        pi = partition(low, high)
+        quicksort(low, pi-1)
+        quicksort(pi+1, high)
+    else:
+        if low <= len(chart)-1:
+            chart[low].set_color(GREEN)
+        
+
+def merge():
+    array = []
+    for i in range(len(chart)):
+        array.append(chart[i].get_height())
+    mergesort(array, 0)
+
+
+def mergesort(array, pos):
+    if len(array) > 1:
+        m = len(array) // 2
+        chart[m+pos].set_color(PURPLE)
+        draw_screen(len(chart))
+        pygame.display.update()
+        l = array[:m]
+        r = array[m:]
+
+        mergesort(l, pos)
+        mergesort(r, m + pos)
+
+        
+        i = j = k = 0
+        while i < len(l) and j < len(r):
+            if l[i] < r[j]:
+                array[k] = l[i]
+                chart[pos + k].set_height(l[i])
+                chart[pos + k].set_color(BLUE)
+                if pos == 0 and len(array) == len(chart):
+                    chart[pos + k].set_color(GREEN)
+                draw_screen(len(chart))
+                pygame.display.update()
+                i += 1
+            else:
+                array[k] = r[j]
+                chart[pos + k].set_height(r[j])
+                chart[pos + k].set_color(BLUE)
+                if pos == 0 and len(array) == len(chart):
+                    chart[pos + k].set_color(GREEN)
+                draw_screen(len(chart))
+                pygame.display.update()
+                j += 1
+            k+=1
+        
+        while i < len(l):
+            array[k] = l[i]
+            chart[pos + k].set_height(l[i])
+            chart[pos + k].set_color(BLUE)
+            if pos == 0 and len(array) == len(chart):
+                chart[pos + k].set_color(GREEN)
+            draw_screen(len(chart))
+            pygame.display.update()
+            i += 1
+            k += 1
+
+        while j < len(r):
+            array[k] = r[j]
+            chart[pos + k].set_height(r[j])
+            chart[pos + k].set_color(BLUE)
+            if pos == 0 and len(array) == len(chart):
+                chart[pos + k].set_color(GREEN)
+            draw_screen(len(chart))
+            pygame.display.update()
+            j += 1
+            k += 1       
+
 
 array_size = set_array()
 run = True
