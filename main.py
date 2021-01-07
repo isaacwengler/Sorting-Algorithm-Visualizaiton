@@ -16,7 +16,7 @@ PURPLE = (129, 34, 158)
 pygame.init()
 WIN = pygame.display.set_mode((WIDTH, WIDTH))
 pygame.display.set_caption("Sorting Algorithm Visualization")
-header =pygame.image.load('header.png')
+header = pygame.image.load('images/header.png')
 
 settings = [1, 1, 3, 1]
 chart = []
@@ -260,6 +260,48 @@ def mergesort(array, pos):
             j += 1
             k += 1       
 
+def heapify(n, i):
+    largest = i
+    l = 2*i+1
+    r = 2*i+2
+    chart[i].set_color(PURPLE)
+    draw_screen(len(chart))
+    pygame.display.update()
+
+    if l < n and chart[largest].get_height() < chart[l].get_height():
+        largest = l
+        chart[largest].set_color(BLUE)
+    if r < n and chart[largest].get_height() < chart[r].get_height():
+        largest = r
+        chart[largest].set_color(BLUE)
+        if chart[l].get_color() == BLUE:
+            chart[l].set_color(NAVY)
+    if largest != i:
+        draw_screen(len(chart))
+        pygame.display.update()
+        temp = chart[i].get_height()
+        chart[i].set_height(chart[largest].get_height())
+        chart[largest].set_height(temp)
+        chart[i].set_color(NAVY)
+
+        heapify(n, largest)
+    else:
+        chart[i].set_color(NAVY)
+
+        
+def heap():
+    n = len(chart)
+    for i in range(n//2-1, -1, -1):
+        heapify(n, i)
+
+    for i in range(n-1, 0, -1):
+        temp = chart[i].get_height()
+        chart[i].set_height(chart[0].get_height())
+        chart[0].set_height(temp)
+        chart[i].set_color(GREEN)
+        heapify(i, 0)
+        if i == 1:
+            chart[0].set_color(GREEN)
 
 array_size = set_array()
 run = True
