@@ -17,6 +17,12 @@ pygame.init()
 WIN = pygame.display.set_mode((WIDTH, WIDTH))
 pygame.display.set_caption("Sorting Algorithm Visualization")
 header = pygame.image.load('images/header.png')
+img1 = pygame.image.load('images/1.png')
+img2 = pygame.image.load('images/2.png')
+img3 = pygame.image.load('images/3.png')
+img4 = pygame.image.load('images/4.png')
+img5 = pygame.image.load('images/5.png')
+
 
 settings = [1, 1, 3, 1]
 chart = []
@@ -61,6 +67,17 @@ def draw_screen(array_size):
     WIN.fill(WHITE)
     WIN.blit(header, (0, 0))
     pygame.draw.rect(WIN, NAVY, pygame.Rect(int(3*WIDTH/4)+10, 0, int(WIDTH/4)-10, int(WIDTH/4)-10))
+    if settings[0] == 1:
+        WIN.blit(img1, (int(3*WIDTH/4)+10, 0))
+    elif settings[0] == 2:
+        WIN.blit(img2, (int(3*WIDTH/4)+10, 0))
+    elif settings[0] == 3:
+        WIN.blit(img3, (int(3*WIDTH/4)+10, 0))
+    elif settings[0] == 4:
+        WIN.blit(img4, (int(3*WIDTH/4)+10, 0))
+    elif settings[0] == 5:
+        WIN.blit(img5, (int(3*WIDTH/4)+10, 0))
+
     for i in range(len(chart)):
         pygame.draw.rect(WIN, chart[i].get_color(), pygame.Rect((i * (int((WIDTH)/array_size))), 800-chart[i].get_height(), int((WIDTH)/array_size), chart[i].get_height()))
 
@@ -306,6 +323,7 @@ def heap():
 array_size = set_array()
 run = True
 sorting = False
+
 
 while run:
     ev = pygame.event.get()
