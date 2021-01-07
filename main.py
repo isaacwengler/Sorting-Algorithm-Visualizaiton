@@ -11,6 +11,7 @@ NAVY = (12, 7, 82)
 BLUE = (10, 94, 125)
 GREEN = (18, 117, 99)
 NEON = (114, 218, 63)
+PURPLE = (129, 34, 158)
 
 pygame.init()
 WIN = pygame.display.set_mode((WIDTH, WIDTH))
@@ -59,10 +60,11 @@ def set_array():
 def draw_screen(array_size):
     WIN.fill(WHITE)
     WIN.blit(header, (0, 0))
+    pygame.draw.rect(WIN, NAVY, pygame.Rect(int(3*WIDTH/4)+10, 0, int(WIDTH/4)-10, int(WIDTH/4)-10))
     for i in range(len(chart)):
         pygame.draw.rect(WIN, chart[i].get_color(), pygame.Rect((i * (int((WIDTH)/array_size))), 800-chart[i].get_height(), int((WIDTH)/array_size), chart[i].get_height()))
 
-    for i in range(3):
+    for i in range(2):
         pygame.draw.rect(WIN, NAVY, pygame.Rect(int(WIDTH/4)*int(i+1), 27 * settings[i], int(WIDTH/4), 27), width=1)
     pygame.draw.line(WIN, NAVY, (settings[3]*int(WIDTH/4), int(WIDTH/4)-10), ((settings[3]+1)*int(WIDTH/4), int(WIDTH/4)-10))
 
@@ -78,10 +80,10 @@ def check_key(event):
     if event.key == pygame.K_LEFT:
         settings[3] -= 1
         if settings[3] < 1:
-            settings[3] = 3
+            settings[3] = 2
     elif event.key == pygame.K_RIGHT:
         settings[3] += 1
-        if settings[3] > 3:
+        if settings[3] > 2:
             settings[3] = 1
     elif event.key == pygame.K_UP:
         settings[settings[3]-1] -= 1
@@ -112,13 +114,11 @@ def bubble():
             chart[j+1].set_color(BLUE)
             draw_screen(len(chart))
             pygame.display.update()
-            
             if chart[j].get_height() > chart[j+1].get_height():
                 chart[j].set_color(NEON)
                 chart[j+1].set_color(NEON)
                 draw_screen(len(chart))
                 pygame.display.update()
-                
                 temp = chart[j].get_height()
                 chart[j].set_height(chart[j+1].get_height())
                 chart[j+1].set_height(temp)
@@ -129,7 +129,35 @@ def bubble():
                 if j == 0:
                     chart[j].set_color(GREEN)
             
+def insertion():
+    def color_rest_green(j):
+        for i in range(j, -1, -1):
+            chart[i].set_color(GREEN)
+            draw_screen(len(chart))
+            pygame.display.update()
 
+    for i in range(1,len(chart)):
+        key = chart[i].get_height()
+        chart[i].set_height
+        j = i - 1
+        chart[i].set_color(PURPLE)
+        draw_screen(len(chart))
+        pygame.display.update()
+        while j >= 0 and key < chart[j].get_height():
+            chart[j + 1].set_height(chart[j].get_height())
+            chart[j].set_height(key)
+            chart[j].set_color(PURPLE)
+            chart[j+1].set_color(BLUE)
+            if i == len(chart)-1:
+                chart[j + 1].set_color(GREEN)
+            draw_screen(len(chart))
+            pygame.display.update()
+            chart[j].set_color(NAVY)
+            if i != len(chart)-1:
+                chart[j+1].set_color(NAVY)
+            j -= 1
+        if i == len(chart)-1:
+            color_rest_green(j + 1)
 
 array_size = set_array()
 run = True
