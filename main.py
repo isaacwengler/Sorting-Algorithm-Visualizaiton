@@ -24,7 +24,7 @@ img4 = pygame.image.load('images/4.png')
 img5 = pygame.image.load('images/5.png')
 
 
-settings = [1, 1, 3, 1]
+settings = [3, 3, 3, 1]
 chart = []
 
 
